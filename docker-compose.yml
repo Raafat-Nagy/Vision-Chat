@@ -1,0 +1,31 @@
+# Vision Chat - Chainlit UI + llama.cpp model server.
+#
+#   docker compose up --build          # UI on http://localhost:8000
+#
+# The llama.cpp server downloads Qwen3-VL-2B-Instruct-GGUF on first
+# start; the model is cached in the `llama-cache` volume.
+
+services:
+  ui:
+    build: .
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      # Inside the compose network the model server is reachable by
+      # service name.
+      LLAMA_BASE_URL: ${LLAMA_BASE_URL:-http://llama-server:8081/v1}
+    restart: unless-stopped
+
+  llama-server:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    command: ["-hf", "Qwen/Qwen3-VL-2B-Instruct-GGUF", "--host", "0.0.0.0", "--port", "8081"]
+    ports:
+      # Lets tools on the host reach the server too (the .env default
+      # http://127.0.0.1:8081/v1 works out of the box).
+      - "8081:8081"
+    volumes:
+      - llama-cache:/root/.cache/llama.cpp
+    restart: unless-stopped
+
+volumes:
+  llama-cache:

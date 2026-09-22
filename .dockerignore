@@ -1,0 +1,15 @@
+# Git / runtime state
+.git
+.venv
+.env
+.files
+
+# Python caches
+**/__pycache__
+.pytest_cache
+.ruff_cache
+
+# Not needed inside the image
+docs
+tests
+assets

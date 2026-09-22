@@ -30,7 +30,7 @@ Everything runs on your machine: the model server, the web UI, and the conversat
 
 Watch the full demonstration on YouTube:
 
-[![Watch the video](https://img.youtube.com/vi/Lx-c-1EgXMs/hqdefault.jpg)](https://youtu.be/Lx-c-1EgXMs)
+[![Watch the video](https://img.youtube.com/vi/rjfEHkhLEhU/hqdefault.jpg)](https://youtu.be/rjfEHkhLEhU)
 
 ## Tech stack
 
@@ -78,6 +78,9 @@ Vision-Chat/
 ├── chainlit.md               # Chainlit welcome screen
 ├── .env.example              # Environment configuration template
 ├── .gitignore
+├── .dockerignore
+├── docker-compose.yml        # UI + llama.cpp model server
+├── Dockerfile                # Chainlit UI image
 ├── Makefile                  # Development commands
 ├── pyproject.toml            # Project metadata and dependencies
 ├── README.md
@@ -142,6 +145,14 @@ The mock speaks llama.cpp's OpenAI protocol (including SSE streaming and `reason
 ```bash
 uv run python tools/mock_llama_server.py --delay-ms 150
 ```
+
+### Or run it all with Docker
+
+```bash
+docker compose up --build      # UI on :8000 + llama.cpp server on :8081
+```
+
+The official llama.cpp server image downloads Qwen3-VL-2B-Instruct-GGUF on first start (cached in a named volume); the UI reaches it over the compose network, and the host default `http://127.0.0.1:8081/v1` works too.
 
 ## Configuration
 
